@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  calicalo-ml-data
+
+  Sample SAM Template for calicalo-ml-data
+
+Globals:
+  Function:
+    Timeout: 15
+
+Resources:
+  MongoProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: mongoproxy/
+      Handler: app.lambda_handler
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        MongoProxy:
+          Type: Api
+          Properties:
+            Path: /upload
+            Method: post
+
+Outputs:
+  MongoProxyApi:
+    Description: "API Gateway endpoint URL for Prod stage for Mongo Proxy function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
